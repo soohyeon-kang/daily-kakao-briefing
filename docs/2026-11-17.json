@@ -73,10 +73,10 @@
       "name": "원/달러",
       "symbol": "KRW=X",
       "unit": "원",
-      "value": 1337.31,
-      "change": 0.30451903243953193,
+      "value": 1338.21,
+      "change": 0.372023251453224,
       "change_unit": "%",
-      "observed": "11/17 14:55 KST",
+      "observed": "11/17 15:13 KST",
       "stale": false,
       "history": [
         1323.93994140625,
@@ -98,7 +98,7 @@
         1336.260009765625,
         1333.780029296875,
         1333.25,
-        1337.31005859375
+        1338.2099609375
       ],
       "source": "Yahoo Finance 공개 차트 API (지연 가능)",
       "url": "https://finance.yahoo.com/quote/KRW%3DX"
@@ -175,10 +175,10 @@
       "name": "금 선물",
       "symbol": "GC=F",
       "unit": "USD/oz",
-      "value": 3882.3,
-      "change": 0.760446405398385,
+      "value": 3878.2,
+      "change": 0.6540358162470783,
       "change_unit": "%",
-      "observed": "11/17 14:45 KST",
+      "observed": "11/17 15:04 KST",
       "stale": false,
       "history": [
         4150.0,
@@ -200,7 +200,7 @@
         3885.300048828125,
         3886.300048828125,
         3853.0,
-        3882.300048828125
+        3878.199951171875
       ],
       "source": "Yahoo Finance 공개 차트 API (지연 가능)",
       "url": "https://finance.yahoo.com/quote/GC%3DF"
@@ -209,11 +209,27 @@
   "items": [
     {
       "group": "미국주식·경제",
+      "text": "알리안츠 \"연준, 금리 세 번 더 올린 뒤 2028년 말 3.75%까지 인하\"",
+      "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1ybFdnRFU5TXVqNTNaX0MwRGpNaldTejRGOEZwcWgwcGZwSEYxLV9RQ3c2N1RnaU8tRF9hNkJEb3BsUGJfakMzSFdvdlFkeXhGamtRblltQ3hwQjB4VkxBeGFoNklfcjdqckZHOUxMRWE?oc=5",
+      "source": "연합인포맥스",
+      "published_at": "2026-11-16T01:17:00+00:00",
+      "published": "11/16 10:17"
+    },
+    {
+      "group": "미국주식·경제",
       "text": "NVIDIA 실적에 주목해야 할 한 주",
       "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE16dFFURUVCclBjd3g1TUFuS1c2WnpnaWNpemdxWW9jOW9ma2tGM0hGaVdPbGo3dzhGVTRHVWktbWNnbVVITzNUNzZaclVWMkFfYnhNVEh1OVlGYjByOFpZOVUxcWpZQQ?oc=5",
       "source": "KB Think",
       "published_at": "2026-11-17T02:06:49+00:00",
       "published": "11/17 11:06"
+    },
+    {
+      "group": "미국주식·경제",
+      "text": "월가 \"연준이 금리 안올린 건 실수\"…한은은?",
+      "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQSE1fU1hWQnhpN2NvcFZuTUNPY1Z1bEhCdDNhSGt3WEtUUVRMYWRvWHdUS3VnMFhXOFBPSGVqekVIV2RzV1RzZ0x1dHljNVlIMVhPekxvNmFjX1FTWlF5ZUJIM1FpVWp6ZW1NOWNaUVM0bG1ybXJUemVRbWF4S3BpQlJIS0YxSFJQN0Z3aTZ3?oc=5",
+      "source": "조선일보",
+      "published_at": "2026-11-16T04:02:53+00:00",
+      "published": "11/16 13:02"
     },
     {
       "group": "미국주식·경제",
@@ -225,11 +241,11 @@
     },
     {
       "group": "미국주식·경제",
-      "text": "[뉴욕은 지금] 연준 추가 인상보다 먼저 도착한 청구서 |",
-      "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBQMUxfR05MZ3pXM0IwTG93cmpiVHVfRC1wZEJtSThfUTdmd3ZScXJKSEt2ZVdMNDBFbFg2ZDZkaHp5Yk1odERGSk1kdEJhMERLOWhwZTNPY2NsQUpfel9zemZnLTNRaWJBVnF2bUxudGhBLTc2?oc=5",
-      "source": "연합인포맥스",
-      "published_at": "2026-11-16T01:21:16+00:00",
-      "published": "11/16 10:21"
+      "text": "미 국채 금리·유가 반등…불확실성 확대",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBTWFlNdmFsZnVWNklUbWxPeS1zZkltLUpMYmFmUVprX1F4WWprY0ZBTFY4ck8zZS1lOGtybGZDblR6cDNGT003VGwtN3IyZnNGYU42YlBUMi1WUdIBX0FVX3lxTFAyTzJ1aWVHd3dxOXlURjdVNG1vVml4NnMyUDVRaGpkMjdTclN2a3oxNG5MN0xFQTFEQjJ3R0dCRTU4YkF6cGxZRHdCUjl6Ml9zekNpVWhiUEMxUU5UX0ZZ?oc=5",
+      "source": "경향신문",
+      "published_at": "2026-11-16T11:38:00+00:00",
+      "published": "11/16 20:38"
     },
     {
       "group": "미국주식·경제",
@@ -238,22 +254,6 @@
       "source": "KB Think",
       "published_at": "2026-11-17T00:44:55+00:00",
       "published": "11/17 09:44"
-    },
-    {
-      "group": "미국주식·경제",
-      "text": "알리안츠 \"연준, 금리 세 번 더 올린 뒤 2028년 말 3.75%까지 인하\"",
-      "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5TMHlwQmpwR0c2dExYT0w5RWlDV211aTdiN095SnRhOUxydzNLTGVZeF8ta195Qi1RREI3YXdYVzRPcVRfYnI0S0l5WWJwZmdwdlJGdU02cjJTc0ZLdXI2WjlwYmVpLWxwNk1adlFFV1VwZw?oc=5",
-      "source": "KB Think",
-      "published_at": "2026-11-16T01:17:34+00:00",
-      "published": "11/16 10:17"
-    },
-    {
-      "group": "미국주식·경제",
-      "text": "월가 \"연준이 금리 안올린 건 실수\"…한은은?",
-      "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQSE1fU1hWQnhpN2NvcFZuTUNPY1Z1bEhCdDNhSGt3WEtUUVRMYWRvWHdUS3VnMFhXOFBPSGVqekVIV2RzV1RzZ0x1dHljNVlIMVhPekxvNmFjX1FTWlF5ZUJIM1FpVWp6ZW1NOWNaUVM0bG1ybXJUemVRbWF4S3BpQlJIS0YxSFJQN0Z3aTZ3?oc=5",
-      "source": "조선일보",
-      "published_at": "2026-11-16T04:02:53+00:00",
-      "published": "11/16 13:02"
     },
     {
       "group": "부동산·세무",
