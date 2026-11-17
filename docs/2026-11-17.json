@@ -73,10 +73,10 @@
       "name": "원/달러",
       "symbol": "KRW=X",
       "unit": "원",
-      "value": 1337.28,
-      "change": 0.3022688918057348,
+      "value": 1337.18,
+      "change": 0.294768423026448,
       "change_unit": "%",
-      "observed": "11/17 14:10 KST",
+      "observed": "11/17 14:47 KST",
       "stale": false,
       "history": [
         1323.93994140625,
@@ -98,7 +98,7 @@
         1336.260009765625,
         1333.780029296875,
         1333.25,
-        1337.280029296875
+        1337.1800537109375
       ],
       "source": "Yahoo Finance 공개 차트 API (지연 가능)",
       "url": "https://finance.yahoo.com/quote/KRW%3DX"
@@ -175,10 +175,10 @@
       "name": "금 선물",
       "symbol": "GC=F",
       "unit": "USD/oz",
-      "value": 3877.4,
-      "change": 0.6332727744614575,
+      "value": 3885.2,
+      "change": 0.8357124318712605,
       "change_unit": "%",
-      "observed": "11/17 14:00 KST",
+      "observed": "11/17 14:37 KST",
       "stale": false,
       "history": [
         4150.0,
@@ -200,7 +200,7 @@
         3885.300048828125,
         3886.300048828125,
         3853.0,
-        3877.39990234375
+        3885.199951171875
       ],
       "source": "Yahoo Finance 공개 차트 API (지연 가능)",
       "url": "https://finance.yahoo.com/quote/GC%3DF"
@@ -238,9 +238,9 @@
     {
       "group": "미국주식·경제",
       "text": "알리안츠 \"연준, 금리 세 번 더 올린 뒤 2028년 말 3.75%까지 인하\"",
-      "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5la3gtbkZjeDlUMXYzaXBxSHc0SnM5cEpRWF9XVzJqMTNkV2dSUjZCc2o2V1dTOGVwRmpCSzMwcVVLRUxlLUNWRGREMkZScVFKWXdTNlBSZkN4LVJMUXJfSXJpUWJab0VZRll5NWRiOWdScnZB0gF0QVVfeXFMTmVreC1uRmN4OVQxdjNpcHFIdzRKczlwSlFYX1dXMmoxM2RXZ1JSNkJzajZXV1M4ZXBGakJLMzBxVUtFTGUtQ1ZEZEQyRlJxUUpZd1M2UFJmQ3gtUkxRcl9JcmlRYlpvRVlGWXk1ZGI5Z1JydkE?oc=5",
-      "source": "연합인포맥스",
-      "published": "11/16 10:23"
+      "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5TMHlwQmpwR0c2dExYT0w5RWlDV211aTdiN095SnRhOUxydzNLTGVZeF8ta195Qi1RREI3YXdYVzRPcVRfYnI0S0l5WWJwZmdwdlJGdU02cjJTc0ZLdXI2WjlwYmVpLWxwNk1adlFFV1VwZw?oc=5",
+      "source": "KB Think",
+      "published": "11/16 10:17"
     },
     {
       "group": "미국주식·경제",
@@ -248,35 +248,9 @@
       "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQSE1fU1hWQnhpN2NvcFZuTUNPY1Z1bEhCdDNhSGt3WEtUUVRMYWRvWHdUS3VnMFhXOFBPSGVqekVIV2RzV1RzZ0x1dHljNVlIMVhPekxvNmFjX1FTWlF5ZUJIM1FpVWp6ZW1NOWNaUVM0bG1ybXJUemVRbWF4S3BpQlJIS0YxSFJQN0Z3aTZ3?oc=5",
       "source": "조선일보",
       "published": "11/16 13:02"
-    },
-    {
-      "group": "부동산·세무",
-      "text": "부동산 거래신고 등에 관한 법률 시행령 일부개정령안 입법예고",
-      "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE5uYm9SdXljdnBhT21TZi1acEhWVmN6U0t5YlZYVl9RM3FPX2tidzlmMkJfR2w0LVB6X0VOaDJXdWJoQU9fWVZydE4tNF9fTl8xT3dFaE1hRUp2bUVqV3JNZUpYUWxCUQ?oc=5",
-      "source": "국토교통부",
-      "published": "11/13 12:34"
-    },
-    {
-      "group": "부동산·세무",
-      "text": "결혼 페널티 해소하는 세제개편 발맞춰 혼인·출산 지원 강화 추진",
-      "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxORFhISVMzc0JuZVd0UG9wTFdQcW1QNkVtV1VVczd6RzVmQkowd24xTllZVWRBZ1Z3MVBWcmlwSVJsSWZ5aTM5cGNueHN0cS01WmhXdlVuM1dqaFctNElfcnBwNjJacG1kTkNtZ291bDVUR0c4S251Sm1lV3hzOG5YOG93NWxUMjAxejhWNHVBeWF2ci10WnlpUklnSjJIajBGSktnMDBMS0VQdXNRdW80?oc=5",
-      "source": "대한민국 정책브리핑",
-      "published": "11/13 02:52"
-    },
-    {
-      "group": "부동산·세무",
-      "text": "국세청 홈페이지 서비스 일시 중단 안내",
-      "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOZU02bFdZYklDcm4xUi1CclltWHlVZk9RVlNYZS14Z2kzelVEclFVSEhaOW0xRlREN2tyMVhVQWhxSGR6RmhCRlVuUzVFWExBOGk0bUd5d0NwVkFKODczcWJvdlEtOWVLM3VYTE1JbWp5Vlk5WFQ1SnhOSnQxV1FtQldwaXN1TmMwZHc?oc=5",
-      "source": "국세청",
-      "published": "11/11 23:35"
-    },
-    {
-      "group": "부동산·세무",
-      "text": "국세행정혁신 국민자문단",
-      "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1aUTdXMlg5OEVQWHpRR1lreTROZ0F3VFRRaV84YmJPdWRrQ2dWZC1DT3VlUHNPZEFlamFxUXJXWXUxR2hWRlM2M3g5YzJQcjM5eGJWLXgySFk0V0ZHTUp6WEJfOUpJcktDOXlCZVVpU180N1VBWV9uMUs5Zw?oc=5",
-      "source": "국세청",
-      "published": "11/13 12:16"
     }
   ],
-  "warnings": []
+  "warnings": [
+    "부동산·세무: 확인된 뉴스 없음 / 조회 불가"
+  ]
 }
