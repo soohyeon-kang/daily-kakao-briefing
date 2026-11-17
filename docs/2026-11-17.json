@@ -73,10 +73,10 @@
       "name": "원/달러",
       "symbol": "KRW=X",
       "unit": "원",
-      "value": 1338.21,
-      "change": 0.372023251453224,
+      "value": 1337.28,
+      "change": 0.3022688918057348,
       "change_unit": "%",
-      "observed": "11/17 15:13 KST",
+      "observed": "11/17 15:36 KST",
       "stale": false,
       "history": [
         1323.93994140625,
@@ -98,7 +98,7 @@
         1336.260009765625,
         1333.780029296875,
         1333.25,
-        1338.2099609375
+        1337.280029296875
       ],
       "source": "Yahoo Finance 공개 차트 API (지연 가능)",
       "url": "https://finance.yahoo.com/quote/KRW%3DX"
@@ -175,10 +175,10 @@
       "name": "금 선물",
       "symbol": "GC=F",
       "unit": "USD/oz",
-      "value": 3878.2,
-      "change": 0.6540358162470783,
+      "value": 3876.1,
+      "change": 0.5995328315598236,
       "change_unit": "%",
-      "observed": "11/17 15:04 KST",
+      "observed": "11/17 15:26 KST",
       "stale": false,
       "history": [
         4150.0,
@@ -200,7 +200,7 @@
         3885.300048828125,
         3886.300048828125,
         3853.0,
-        3878.199951171875
+        3876.10009765625
       ],
       "source": "Yahoo Finance 공개 차트 API (지연 가능)",
       "url": "https://finance.yahoo.com/quote/GC%3DF"
@@ -213,7 +213,8 @@
       "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1ybFdnRFU5TXVqNTNaX0MwRGpNaldTejRGOEZwcWgwcGZwSEYxLV9RQ3c2N1RnaU8tRF9hNkJEb3BsUGJfakMzSFdvdlFkeXhGamtRblltQ3hwQjB4VkxBeGFoNklfcjdqckZHOUxMRWE?oc=5",
       "source": "연합인포맥스",
       "published_at": "2026-11-16T01:17:00+00:00",
-      "published": "11/16 10:17"
+      "published": "11/16 10:17",
+      "cached": true
     },
     {
       "group": "미국주식·경제",
@@ -221,7 +222,8 @@
       "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE16dFFURUVCclBjd3g1TUFuS1c2WnpnaWNpemdxWW9jOW9ma2tGM0hGaVdPbGo3dzhGVTRHVWktbWNnbVVITzNUNzZaclVWMkFfYnhNVEh1OVlGYjByOFpZOVUxcWpZQQ?oc=5",
       "source": "KB Think",
       "published_at": "2026-11-17T02:06:49+00:00",
-      "published": "11/17 11:06"
+      "published": "11/17 11:06",
+      "cached": true
     },
     {
       "group": "미국주식·경제",
@@ -229,7 +231,8 @@
       "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQSE1fU1hWQnhpN2NvcFZuTUNPY1Z1bEhCdDNhSGt3WEtUUVRMYWRvWHdUS3VnMFhXOFBPSGVqekVIV2RzV1RzZ0x1dHljNVlIMVhPekxvNmFjX1FTWlF5ZUJIM1FpVWp6ZW1NOWNaUVM0bG1ybXJUemVRbWF4S3BpQlJIS0YxSFJQN0Z3aTZ3?oc=5",
       "source": "조선일보",
       "published_at": "2026-11-16T04:02:53+00:00",
-      "published": "11/16 13:02"
+      "published": "11/16 13:02",
+      "cached": true
     },
     {
       "group": "미국주식·경제",
@@ -237,7 +240,8 @@
       "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5hLU8tQml1WUhPZU5EWHpYUW13NElHcHBDRFlFVWdsWUJkQlV2aVFJSC1UODhXeXB1QzVhQ3RDT1ducFFJNy1JbXA1SWhGaFlOZW53SXhzdnY?oc=5",
       "source": "뉴스1",
       "published_at": "2026-11-16T20:26:52+00:00",
-      "published": "11/17 05:26"
+      "published": "11/17 05:26",
+      "cached": true
     },
     {
       "group": "미국주식·경제",
@@ -245,7 +249,8 @@
       "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBTWFlNdmFsZnVWNklUbWxPeS1zZkltLUpMYmFmUVprX1F4WWprY0ZBTFY4ck8zZS1lOGtybGZDblR6cDNGT003VGwtN3IyZnNGYU42YlBUMi1WUdIBX0FVX3lxTFAyTzJ1aWVHd3dxOXlURjdVNG1vVml4NnMyUDVRaGpkMjdTclN2a3oxNG5MN0xFQTFEQjJ3R0dCRTU4YkF6cGxZRHdCUjl6Ml9zekNpVWhiUEMxUU5UX0ZZ?oc=5",
       "source": "경향신문",
       "published_at": "2026-11-16T11:38:00+00:00",
-      "published": "11/16 20:38"
+      "published": "11/16 20:38",
+      "cached": true
     },
     {
       "group": "미국주식·경제",
@@ -253,46 +258,43 @@
       "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE96LXhBTnhnVDNiZ2RLR09zakMtYWxubXNoZ0lGYnVQV1NseW10WmIzak45X01uaXlrSXgzc1kxVG4wbEpYZGNHVmRsWTBTRUZoenZlSExpWFZuelhOd0RUZE51T0hDQ1dQT0lZTFdqN2ctQQ?oc=5",
       "source": "KB Think",
       "published_at": "2026-11-17T00:44:55+00:00",
-      "published": "11/17 09:44"
+      "published": "11/17 09:44",
+      "cached": true
     },
     {
       "group": "부동산·세무",
       "text": "부동산 거래신고 등에 관한 법률 시행령 일부개정령안 입법예고",
       "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE5uYm9SdXljdnBhT21TZi1acEhWVmN6U0t5YlZYVl9RM3FPX2tidzlmMkJfR2w0LVB6X0VOaDJXdWJoQU9fWVZydE4tNF9fTl8xT3dFaE1hRUp2bUVqV3JNZUpYUWxCUQ?oc=5",
       "source": "국토교통부",
-      "published": "11/13 12:34",
-      "published_at": "2026-11-13T12:34:00+09:00",
-      "cached": true
+      "published_at": "2026-11-13T03:34:08+00:00",
+      "published": "11/13 12:34"
     },
     {
       "group": "부동산·세무",
       "text": "결혼 페널티 해소하는 세제개편 발맞춰 혼인·출산 지원 강화 추진",
       "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxORFhISVMzc0JuZVd0UG9wTFdQcW1QNkVtV1VVczd6RzVmQkowd24xTllZVWRBZ1Z3MVBWcmlwSVJsSWZ5aTM5cGNueHN0cS01WmhXdlVuM1dqaFctNElfcnBwNjJacG1kTkNtZ291bDVUR0c4S251Sm1lV3hzOG5YOG93NWxUMjAxejhWNHVBeWF2ci10WnlpUklnSjJIajBGSktnMDBMS0VQdXNRdW80?oc=5",
       "source": "대한민국 정책브리핑",
-      "published": "11/13 02:52",
-      "published_at": "2026-11-13T02:52:00+09:00",
-      "cached": true
+      "published_at": "2026-11-12T17:52:34+00:00",
+      "published": "11/13 02:52"
     },
     {
       "group": "부동산·세무",
       "text": "국세청 홈페이지 서비스 일시 중단 안내",
       "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOZU02bFdZYklDcm4xUi1CclltWHlVZk9RVlNYZS14Z2kzelVEclFVSEhaOW0xRlREN2tyMVhVQWhxSGR6RmhCRlVuUzVFWExBOGk0bUd5d0NwVkFKODczcWJvdlEtOWVLM3VYTE1JbWp5Vlk5WFQ1SnhOSnQxV1FtQldwaXN1TmMwZHc?oc=5",
       "source": "국세청",
-      "published": "11/11 23:35",
-      "published_at": "2026-11-11T23:35:00+09:00",
-      "cached": true
+      "published_at": "2026-11-11T14:35:39+00:00",
+      "published": "11/11 23:35"
     },
     {
       "group": "부동산·세무",
       "text": "국세행정혁신 국민자문단",
       "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1aUTdXMlg5OEVQWHpRR1lreTROZ0F3VFRRaV84YmJPdWRrQ2dWZC1DT3VlUHNPZEFlamFxUXJXWXUxR2hWRlM2M3g5YzJQcjM5eGJWLXgySFk0V0ZHTUp6WEJfOUpJcktDOXlCZVVpU180N1VBWV9uMUs5Zw?oc=5",
       "source": "국세청",
-      "published": "11/13 12:16",
-      "published_at": "2026-11-13T12:16:00+09:00",
-      "cached": true
+      "published_at": "2026-11-13T03:16:01+00:00",
+      "published": "11/13 12:16"
     }
   ],
   "warnings": [
-    "부동산·세무: 현재 조회 제한 · 이전 조회 자료 사용(게시일 확인)"
+    "미국주식·경제: 현재 조회 제한 · 이전 조회 자료 사용(게시일 확인)"
   ]
 }
