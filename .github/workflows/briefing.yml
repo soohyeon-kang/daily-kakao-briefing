@@ -1,0 +1,34 @@
+name: Daily economic and tax briefing
+on:
+  schedule:
+    - cron: '0 0 * * *' # 09:00 Asia/Seoul; GitHub may start later.
+  workflow_dispatch:
+    inputs:
+      send:
+        description: 'Send one Kakao message (false builds a preview only)'
+        type: boolean
+        default: false
+permissions:
+  contents: write
+concurrency:
+  group: daily-kakao
+  cancel-in-progress: false
+jobs:
+  briefing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install -r requirements.txt
+      - run: sudo apt-get update -qq && sudo apt-get install -y fonts-nanum
+      - run: python -m unittest -v
+      - name: Build, publish and optionally send
+        env:
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
+          SEND: ${{ github.event_name == 'schedule' || inputs.send }}
+        run: python briefing.py --cloud
