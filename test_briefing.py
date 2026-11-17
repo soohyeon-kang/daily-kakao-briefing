@@ -109,8 +109,20 @@ class BriefingTests(unittest.TestCase):
     def test_uncertain_send_does_not_retry(self):
         with patch.object(b, 'json_request', side_effect=RuntimeError('timeout')) as call:
             with self.assertRaises(RuntimeError):
-                b.send_message('secret', {})
+                b.send_message('secret', b.build_template({'date': '2026-11-17'}, 'owner/repo', 'a' * 40))
             self.assertEqual(call.call_count, 1)
+
+    def test_custom_image_template_and_send_endpoint(self):
+        template = b.build_template({'date': '2026-11-17'}, 'owner/repo', 'a' * 40)
+        self.assertEqual(template['template_id'], '139046')
+        self.assertEqual(list(template['template_args']), ['IMAGE'])
+        self.assertTrue(template['template_args']['IMAGE'].endswith('/docs/2026-11-17.png'))
+        with patch.object(b, 'json_request', return_value={'result_code': 0}) as call:
+            b.send_message('secret', template)
+            self.assertEqual(call.call_args.args[0], 'https://kapi.kakao.com/v2/api/talk/memo/send')
+            self.assertEqual(json.loads(call.call_args.kwargs['data']['template_args']), template['template_args'])
+        with self.assertRaises(ValueError):
+            b.build_template({'date': '2026-11-17'}, 'https://bad', 'a' * 40)
 
     def test_existing_attempt_blocks_send_before_credentials(self):
         with tempfile.TemporaryDirectory() as temp, patch.object(b, 'ROOT', Path(temp)):
@@ -138,7 +150,7 @@ class BriefingTests(unittest.TestCase):
     def test_kakao_rejects_nonzero_result(self):
         with patch.object(b, 'json_request', return_value={'result_code': -1}):
             with self.assertRaises(RuntimeError):
-                b.send_message('secret', {})
+                b.send_message('secret', b.build_template({'date': '2026-11-17'}, 'owner/repo', 'a' * 40))
 
     def test_render_ten_long_headlines_without_cropping(self):
         report = {'date': '2026-11-17', 'demo': True, 'markets': [], 'warnings': ['테스트 데이터'],

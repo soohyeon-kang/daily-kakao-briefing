@@ -347,20 +347,15 @@ def build_template(report, repository, sha):
     if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', repository) or not re.fullmatch(r'[a-f0-9]{40}', sha):
         raise ValueError('Invalid repository or commit')
     path = f"docs/{report['date']}"
-    link = f'https://github.com/{repository}/blob/{sha}/{path}.md'
-    return {'object_type': 'feed', 'content': {
-        'title': f"{report['date']} 경제·세무 {len(report['items'])}줄",
-        'description': '미국주식·환율·금리 | 부동산·세무\n그림을 눌러 크게 보고 출처를 확인하세요.',
-        'image_url': f'https://raw.githubusercontent.com/{repository}/{sha}/{path}.png',
-        'image_width': 1080,
-        'image_height': Image.open(ROOT / 'docs' / (report['date'] + '.png')).height,
-        'link': {'web_url': link, 'mobile_web_url': link}},
-        'buttons': [{'title': '요약·기사 원문 보기', 'link': {'web_url': link, 'mobile_web_url': link}}]}
+    # The default feed adds a button even when buttons is omitted.
+    return {'template_id': '139046', 'template_args': {
+        'IMAGE': f'https://raw.githubusercontent.com/{repository}/{sha}/{path}.png'}}
 
 
 def send_message(access, template):
-    result = json_request('https://kapi.kakao.com/v2/api/talk/memo/default/send',
-                          data={'template_object': json.dumps(template, ensure_ascii=False)}, form=True,
+    result = json_request('https://kapi.kakao.com/v2/api/talk/memo/send',
+                          data={'template_id': template['template_id'],
+                                'template_args': json.dumps(template['template_args'], ensure_ascii=False)}, form=True,
                           headers={'Authorization': 'Bearer ' + access})
     if result.get('result_code') != 0:
         raise RuntimeError('Kakao did not confirm delivery; do not retry automatically')
@@ -390,7 +385,7 @@ def run_cloud(report, send):
     expected = hashlib.sha256((ROOT / 'docs' / (report['date'] + '.png')).read_bytes()).digest()
     for _ in range(6):
         try:
-            if hashlib.sha256(request(template['content']['image_url'])).digest() == expected:
+            if hashlib.sha256(request(template['template_args']['IMAGE'])).digest() == expected:
                 break
         except (OSError, RuntimeError):
             pass
