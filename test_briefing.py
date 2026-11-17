@@ -44,6 +44,21 @@ class BriefingTests(unittest.TestCase):
         self.assertEqual(result[0]['url'], 'https://www.nts.go.kr/notice')
         self.assertEqual(result[0]['source'], 'NTS')
 
+    def test_news_cache_is_marked_and_expired_articles_are_not_reused(self):
+        now = datetime(2026, 11, 17, tzinfo=timezone.utc)
+        item = {'group': '부동산·세무', 'text': '세제개편안 공개 안내', 'url': 'https://www.nts.go.kr/news',
+                'source': '국세청', 'published': '11/16 09:00', 'published_at': '2026-11-16T00:00:00+00:00'}
+        with tempfile.TemporaryDirectory() as temp, patch.object(b, 'ROOT', Path(temp)):
+            state = Path(temp) / '.state'
+            state.mkdir()
+            cache = state / 'news-cache.json'
+            cache.write_text(json.dumps([item, {**item, 'published_at': '2026-10-01T00:00:00+00:00'}]), encoding='utf-8')
+            with patch.object(b, 'request', side_effect=RuntimeError('HTTP 429')):
+                items, warnings = b.collect_news(now)
+            self.assertEqual(len(items), 1)
+            self.assertTrue(items[0]['cached'])
+            self.assertIn('이전 조회 자료', warnings[1])
+
     def test_news_filters_future_old_unofficial_and_duplicates(self):
         now = datetime(2026, 11, 17, 3, tzinfo=timezone.utc)
         item = '<item><title>{}</title><link>https://news.google.com/test</link><pubDate>{}</pubDate><source url="{}">기관</source></item>'

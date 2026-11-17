@@ -106,6 +106,7 @@ def parse_news(xml, group, now):
         seen.add(title)
         result.append({'group': group, 'text': title, 'url': link,
                        'source': source_name,
+                       'published_at': published.isoformat(),
                        'published': published.astimezone(KST).strftime('%m/%d %H:%M')})
     if group == '부동산·세무':
         tax_terms = ('세제', '세법', '양도', '부가세', '소득세', '상속', '증여', '취득세', '종부세',
@@ -122,6 +123,13 @@ def collect_news(now):
          'OR site:law.go.kr OR site:tt.go.kr OR site:korea.kr) when:7d', 4),
     ]
     items, warnings = [], []
+    cache_path = ROOT / '.state' / 'news-cache.json'
+    try:
+        cached = json.loads(cache_path.read_text(encoding='utf-8'))
+        if not isinstance(cached, list):
+            cached = []
+    except (OSError, ValueError):
+        cached = []
     for group, query, limit in queries:
         urls = ['https://news.google.com/rss/search?' + urllib.parse.urlencode(
                     {'q': query, 'hl': 'ko', 'gl': 'KR', 'ceid': 'KR:ko'}),
@@ -137,8 +145,24 @@ def collect_news(now):
                 errors.append(type(exc).__name__ + ': ' + str(exc))
         items.extend(found[:limit])
         if not found:
-            warnings.append(f'{group}: 확인된 뉴스 없음 / 조회 불가')
+            reusable = []
+            for item in cached:
+                try:
+                    date = datetime.fromisoformat(item['published_at'])
+                    max_age = 7 if group == '부동산·세무' else 2
+                    valid = item['group'] == group and now - timedelta(days=max_age) <= date <= now
+                    valid = valid and urllib.parse.urlsplit(item['url']).scheme == 'https'
+                    if valid:
+                        reusable.append({**item, 'cached': True})
+                except (ValueError, KeyError, TypeError):
+                    continue
+            items.extend(reusable[:limit])
+            warnings.append(f'{group}: 현재 조회 제한 · 이전 조회 자료 사용(게시일 확인)' if reusable
+                            else f'{group}: 확인된 뉴스 없음 / 조회 불가')
             print(group + ' RSS diagnostics: ' + '; '.join(errors))
+    if items:
+        cache_path.parent.mkdir(exist_ok=True)
+        cache_path.write_text(json.dumps(items, ensure_ascii=False), encoding='utf-8')
     return items, warnings
 
 
@@ -255,7 +279,8 @@ def render(report, path):
             for line in lines:
                 draw.text((113, y), line, fill=ink, font=body)
                 y += 41
-            draw.text((113, y + 3), item['source'] + ' · ' + item['published'] + ' · 원문 확인', fill=muted, font=small)
+            label = ' · 이전 조회 자료' if item.get('cached') else ' · 원문 확인'
+            draw.text((113, y + 3), item['source'] + ' · ' + item['published'] + label, fill=muted, font=small)
             y += 49
         y += 25
     notes = ['기사 제목을 줄여 정리한 브리핑입니다. 원문 전문 분석은 포함하지 않습니다.',
@@ -280,7 +305,8 @@ def write_report(report, directory):
              '공개 뉴스 제목 기반입니다. 개별 세무 판단·매매 추천이 아닙니다.', '']
     for i, item in enumerate(report['items'], 1):
         safe_title = item['text'].replace('[', '［').replace(']', '］')
-        lines += [f"{i}. [{safe_title}]({item['url']}) — {item['source']} / {item['published']} KST"]
+        label = ' / 이전 조회 자료' if item.get('cached') else ''
+        lines += [f"{i}. [{safe_title}]({item['url']}) — {item['source']} / {item['published']} KST{label}"]
     lines += ['', '## 시장 데이터', '']
     for metric in report['markets']:
         lines += [f"- [{metric['name']}]({metric['url']}): {metric['value']:,.2f} {metric['unit']}, "
