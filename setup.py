@@ -146,7 +146,7 @@ def main():
             time.sleep(3)
     print(f'실행 확인: https://github.com/{repo}/actions')
     print('작업 마지막에 Kakao API result_code=0을 확인하고 휴대폰에서 수신을 확인하세요.')
-    print('이후 PC를 꺼도 GitHub에서 매일 오전 9시(KST, 지연 가능)에 실행됩니다.')
+    print('이후 PC를 꺼도 GitHub에서 한국 공휴일을 제외한 평일 오전 9시(KST, 지연 가능)에 실행됩니다.')
     print('GitHub 토큰은 저장하지 않았습니다. 최초 성공 후 해당 토큰을 폐기해도 됩니다.')
 
 
