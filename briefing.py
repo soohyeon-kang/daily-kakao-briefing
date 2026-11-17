@@ -18,6 +18,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from zoneinfo import ZoneInfo
 
+import holidays
 from nacl.secret import SecretBox
 from PIL import Image, ImageDraw, ImageFont
 
@@ -404,11 +405,19 @@ def run_cloud(report, send):
     print('Kakao API result_code=0: one message sent.')
 
 
+def is_delivery_day(now):
+    day = now.astimezone(KST).date()
+    return day.weekday() < 5 and day not in holidays.SouthKorea(years=day.year, observed=True)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--cloud', action='store_true')
     args = parser.parse_args()
     now = datetime.now(KST)
+    if args.cloud and not is_delivery_day(now):
+        print('Korean weekend or public holiday: no briefing or Kakao message sent.')
+        return
     markets, market_warnings = collect_markets(now)
     items, news_warnings = collect_news(now)
     report = {'date': now.strftime('%Y-%m-%d'), 'markets': markets, 'items': items,

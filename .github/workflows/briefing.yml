@@ -1,7 +1,7 @@
 name: Daily economic and tax briefing
 on:
   schedule:
-    - cron: '0 0 * * *' # 09:00 Asia/Seoul; GitHub may start later.
+    - cron: '0 0 * * 1-5' # Weekdays 09:00 Asia/Seoul; Korean holidays are checked in Python.
   workflow_dispatch:
     inputs:
       send:

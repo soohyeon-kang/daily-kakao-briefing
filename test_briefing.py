@@ -12,6 +12,25 @@ import briefing as b
 
 
 class BriefingTests(unittest.TestCase):
+    def test_korean_weekends_and_public_holidays_are_excluded(self):
+        for day in ('2026-11-21', '2026-12-25', '2026-02-17', '2026-08-17',
+                    '2026-07-17', '2026-06-03', '2025-01-27'):
+            with self.subTest(day=day):
+                self.assertFalse(b.is_delivery_day(datetime.fromisoformat(day + 'T09:00:00+09:00')))
+        self.assertTrue(b.is_delivery_day(datetime.fromisoformat('2026-11-18T09:00:00+09:00')))
+
+    def test_delivery_day_uses_korean_date(self):
+        self.assertFalse(b.is_delivery_day(datetime.fromisoformat('2026-11-20T15:30:00+00:00')))
+        self.assertTrue(b.is_delivery_day(datetime.fromisoformat('2026-11-22T15:30:00+00:00')))
+
+    def test_cloud_holiday_stops_before_data_collection(self):
+        with patch.object(b, 'is_delivery_day', return_value=False), \
+             patch('sys.argv', ['briefing.py', '--cloud']), \
+             patch.object(b, 'collect_markets') as markets, patch.object(b, 'run_cloud') as cloud:
+            b.main()
+            markets.assert_not_called()
+            cloud.assert_not_called()
+
     def test_empty_http_response_is_valid(self):
         with patch.object(b, 'request', return_value=b''):
             self.assertEqual(b.json_request('https://api.github.com/test'), {})
