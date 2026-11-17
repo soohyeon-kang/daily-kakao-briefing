@@ -70,6 +70,12 @@ def parse_news(xml, group, now):
         source = item.find('source')
         source_url = source.get('url', '') if source is not None else ''
         source_name = (source.text or '') if source is not None else ''
+        if not source_url:
+            # Bing RSS wraps original URLs and uses a namespaced Source element.
+            original = urllib.parse.parse_qs(urllib.parse.urlsplit(link).query).get('url', [link])[0]
+            if (urllib.parse.urlsplit(link).hostname or '').endswith('bing.com'):
+                link, source_url = original, original
+                source_name = next((e.text or '' for e in item if e.tag.rsplit('}', 1)[-1].lower() == 'source'), '')
         suffix = ' - ' + source_name
         if source_name and title.endswith(suffix):
             title = title[:-len(suffix)].rstrip()
@@ -117,15 +123,22 @@ def collect_news(now):
     ]
     items, warnings = [], []
     for group, query, limit in queries:
-        url = 'https://news.google.com/rss/search?' + urllib.parse.urlencode(
-            {'q': query, 'hl': 'ko', 'gl': 'KR', 'ceid': 'KR:ko'})
-        try:
-            found = parse_news(request(url), group, now)
-            items.extend(found[:limit])
-            if not found:
-                warnings.append(f'{group}: 기간 내 확인된 뉴스 없음')
-        except (RuntimeError, ET.ParseError, OSError, ValueError):
-            warnings.append(f'{group}: 뉴스 조회 실패')
+        urls = ['https://news.google.com/rss/search?' + urllib.parse.urlencode(
+                    {'q': query, 'hl': 'ko', 'gl': 'KR', 'ceid': 'KR:ko'}),
+                'https://www.bing.com/news/search?' + urllib.parse.urlencode(
+                    {'q': re.sub(r'\swhen:\d+d', '', query), 'format': 'rss', 'setlang': 'ko', 'cc': 'kr'})]
+        found, errors = [], []
+        for url in urls:
+            try:
+                found = parse_news(request(url), group, now)
+                if found:
+                    break
+            except (RuntimeError, ET.ParseError, OSError, ValueError) as exc:
+                errors.append(type(exc).__name__ + ': ' + str(exc))
+        items.extend(found[:limit])
+        if not found:
+            warnings.append(f'{group}: 확인된 뉴스 없음 / 조회 불가')
+            print(group + ' RSS diagnostics: ' + '; '.join(errors))
     return items, warnings
 
 
@@ -247,7 +260,7 @@ def render(report, path):
         y += 25
     notes = ['기사 제목을 줄여 정리한 브리핑입니다. 원문 전문 분석은 포함하지 않습니다.',
              '세제개편안·입법예고는 확정 법률이 아닙니다. 적용일은 원문에서 확인하세요.',
-             '시장: Yahoo Finance 공개 API(지연 가능) · 뉴스: Google News RSS / 공식 기관']
+             '시장: Yahoo Finance 공개 API(지연 가능) · 뉴스: 공개 뉴스 RSS / 공식 기관']
     notes += report['warnings']
     for note in notes:
         for line in wrap(draw, note, small, 970):

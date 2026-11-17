@@ -34,6 +34,16 @@ class BriefingTests(unittest.TestCase):
         self.assertTrue(b.is_tax_source('https://www.nts.go.kr/'))
         self.assertFalse(b.is_tax_source('https://nts.go.kr.evil.example/'))
 
+    def test_bing_rss_keeps_original_official_link(self):
+        xml = b'''<rss xmlns:News="https://www.bing.com/news"><channel><item>
+        <title>Tax law amendment announcement</title>
+        <link>https://www.bing.com/news/apiclick.aspx?url=https%3A%2F%2Fwww.nts.go.kr%2Fnotice</link>
+        <pubDate>Mon, 16 Nov 2026 03:00:00 GMT</pubDate><News:Source>NTS</News:Source>
+        </item></channel></rss>'''
+        result = b.parse_news(xml, '부동산·세무', datetime(2026, 11, 17, tzinfo=timezone.utc))
+        self.assertEqual(result[0]['url'], 'https://www.nts.go.kr/notice')
+        self.assertEqual(result[0]['source'], 'NTS')
+
     def test_news_filters_future_old_unofficial_and_duplicates(self):
         now = datetime(2026, 11, 17, 3, tzinfo=timezone.utc)
         item = '<item><title>{}</title><link>https://news.google.com/test</link><pubDate>{}</pubDate><source url="{}">기관</source></item>'
