@@ -73,10 +73,10 @@
       "name": "원/달러",
       "symbol": "KRW=X",
       "unit": "원",
-      "value": 1330.42,
-      "change": -0.19429784822698748,
+      "value": 1330.48,
+      "change": -0.18979675674527519,
       "change_unit": "%",
-      "observed": "11/19 09:53 KST",
+      "observed": "11/19 10:01 KST",
       "stale": false,
       "history": [
         1325.989990234375,
@@ -98,7 +98,7 @@
         1333.25,
         1335.6700439453125,
         1333.010009765625,
-        1330.4200439453125
+        1330.47998046875
       ],
       "source": "Yahoo Finance 공개 차트 API (지연 가능)",
       "url": "https://finance.yahoo.com/quote/KRW%3DX"
@@ -175,10 +175,10 @@
       "name": "금 선물",
       "symbol": "GC=F",
       "unit": "USD/oz",
-      "value": 3752.4,
-      "change": -2.893223761311059,
+      "value": 3756.3,
+      "change": -2.792297306953606,
       "change_unit": "%",
-      "observed": "11/19 09:43 KST",
+      "observed": "11/19 09:51 KST",
       "stale": false,
       "history": [
         4060.39990234375,
@@ -200,7 +200,7 @@
         3886.300048828125,
         3853.0,
         3864.199951171875,
-        3752.39990234375
+        3756.300048828125
       ],
       "source": "Yahoo Finance 공개 차트 API (지연 가능)",
       "url": "https://finance.yahoo.com/quote/GC%3DF"
@@ -288,5 +288,15 @@
       "published": "11/13 12:16"
     }
   ],
-  "warnings": []
+  "warnings": [],
+  "demo": true,
+  "cards": [
+    "2026-11-19-01.png",
+    "2026-11-19-02.png",
+    "2026-11-19-03.png",
+    "2026-11-19-04.png",
+    "2026-11-19-05.png",
+    "2026-11-19-06.png",
+    "2026-11-19-07.png"
+  ]
 }
