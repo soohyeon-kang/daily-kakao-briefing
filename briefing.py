@@ -236,73 +236,84 @@ def wrap(draw, text, face, width):
     return lines + ([line.rstrip()] if line else [])
 
 
-def render(report, path):
+def render(report, directory):
     ink, muted, accent = '#14283E', '#66788B', '#2463D5'
-    image = Image.new('RGB', (1080, 4000), '#FFFFFF')
-    draw = ImageDraw.Draw(image)
-    body, small, title = font(28), font(21), font(46, True)
-    draw.text((54, 42), 'MORNING BRIEF', fill=accent, font=font(23, True))
-    draw.text((54, 82), '미국주식 · 부동산 · 세무', fill=ink, font=title)
-    draw.text((54, 151), report['date'] + '  |  헤드라인 기반 · 테스트' if report.get('demo')
-              else report['date'] + '  |  헤드라인 기반', fill=muted, font=small)
-    y = 210
-    draw.text((54, y), '시장 한눈에', fill=ink, font=font(31, True))
-    y += 54
-    for index, metric in enumerate(report['markets']):
-        col, row = index % 2, index // 2
-        x, top = 54 + col * 498, y + row * 173
-        draw.rounded_rectangle((x, top, x + 474, top + 153), radius=14, fill='#F3F6FA')
-        draw.text((x + 19, top + 14), metric['name'], fill=muted, font=small)
-        value = f"{metric['value']:,.2f} {metric['unit']}"
-        draw.text((x + 19, top + 45), value, fill=ink, font=font(29, True))
-        change = f"{metric['change']:+.2f}{metric['change_unit']}"
-        draw.text((x + 19, top + 85), change, fill=accent, font=font(23, True))
-        draw.text((x + 19, top + 120), metric['observed'] + (' · 오래된 값' if metric['stale'] else ''), fill=muted, font=font(17))
-        values = metric['history']
-        if len(values) > 1 and max(values) != min(values):
-            points = [(x + 320 + i * 130 / (len(values) - 1),
-                       top + 100 - (v - min(values)) * 55 / (max(values) - min(values)))
-                      for i, v in enumerate(values)]
-            draw.line(points, fill=accent, width=3)
-    y += math.ceil(len(report['markets']) / 2) * 173 + 23
-    draw.text((54, y), '최근 일별 추이 · 단위와 기준 시각은 항목별 표시', fill=muted, font=small)
-    y += 60
+    pages = [('시장 한눈에', report['markets'][i:i + 3]) for i in range(0, len(report['markets']), 3)]
     for group in ('미국주식·경제', '부동산·세무'):
-        draw.text((54, y), group, fill=ink, font=font(31, True))
-        y += 57
         grouped = [(number, item) for number, item in enumerate(report['items'], 1) if item['group'] == group]
-        if not grouped:
-            draw.text((54, y), '확인된 뉴스 없음 · 아래 조회 상태 참고', fill=muted, font=body)
-            y += 60
-        for number, item in grouped:
-            draw.text((54, y), f'{number:02}', fill=accent, font=font(27, True))
-            lines = wrap(draw, item['text'], body, 900)
-            for line in lines:
-                draw.text((113, y), line, fill=ink, font=body)
-                y += 41
-            label = ' · 이전 조회 자료' if item.get('cached') else ' · 원문 확인'
-            draw.text((113, y + 3), item['source'] + ' · ' + item['published'] + label, fill=muted, font=small)
-            y += 49
-        y += 25
-    notes = ['기사 제목을 줄여 정리한 브리핑입니다. 원문 전문 분석은 포함하지 않습니다.',
-             '세제개편안·입법예고는 확정 법률이 아닙니다. 적용일은 원문에서 확인하세요.',
-             '시장: Yahoo Finance 공개 API(지연 가능) · 뉴스: 공개 뉴스 RSS / 공식 기관']
-    notes += report['warnings']
-    for note in notes:
-        for line in wrap(draw, note, small, 970):
-            draw.text((54, y), line, fill=muted, font=small)
-            y += 31
-    y += 30
-    if y > image.height:
-        raise RuntimeError('Report layout overflow')
-    image.crop((0, 0, 1080, y)).save(path)
+        pages.extend((group, grouped[i:i + 2]) for i in range(0, len(grouped), 2))
+    warnings = report['warnings']
+    pages.extend(('조회 상태', warnings[i:i + 4]) for i in range(0, len(warnings), 4))
+    paths = []
+    for page, (group, entries) in enumerate(pages, 1):
+        image = Image.new('RGB', (1080, 1080), '#FFFFFF')
+        draw = ImageDraw.Draw(image)
+        draw.rectangle((0, 0, 1080, 12), fill=accent)
+        draw.text((54, 43), 'MORNING BRIEF', fill=accent, font=font(27, True))
+        draw.text((54, 96), group, fill=ink, font=font(55, True))
+        label = report['date'] + (' · 테스트' if report.get('demo') else '')
+        draw.text((54, 170), label, fill=muted, font=font(30))
+        draw.text((900, 53), f'{page:02}/{len(pages):02}', fill=muted, font=font(28, True))
+        if group == '시장 한눈에':
+            for index, metric in enumerate(entries):
+                top = 235 + index * 250
+                draw.rounded_rectangle((54, top, 1026, top + 225), radius=20, fill='#F3F6FA')
+                draw.text((80, top + 15), metric['name'], fill=muted, font=font(38, True))
+                draw.text((80, top + 66), f"{metric['value']:,.2f} {metric['unit']}", fill=ink, font=font(56, True))
+                draw.text((80, top + 135), f"{metric['change']:+.2f}{metric['change_unit']}", fill=accent, font=font(40, True))
+                draw.text((80, top + 188), metric['observed'] + (' · 오래된 값' if metric['stale'] else ''), fill=muted, font=font(25))
+                values = metric['history']
+                if len(values) > 1 and max(values) != min(values):
+                    points = [(780 + i * 215 / (len(values) - 1),
+                               top + 170 - (v - min(values)) * 55 / (max(values) - min(values)))
+                              for i, v in enumerate(values)]
+                    draw.line(points, fill=accent, width=5)
+            footnote = 'Yahoo Finance · 지연 가능 · 그래프: 최근 일별 추이'
+        elif group == '조회 상태':
+            y = 240
+            for note in entries:
+                for line in wrap(draw, note, font(38), 960):
+                    draw.text((54, y), line, fill=ink, font=font(38))
+                    y += 52
+                y += 34
+            if y > 1000:
+                raise RuntimeError('Status card layout overflow')
+            footnote = '확인된 자료만 표시합니다. 조회 실패 시 항목이 줄어듭니다.'
+        else:
+            for index, (number, item) in enumerate(entries):
+                top = 240 + index * 380
+                draw.text((54, top), f'{number:02}', fill=accent, font=font(32, True))
+                face = font(58, True)
+                lines = wrap(draw, item['text'], face, 880)
+                # shortcut: exceptionally long headlines use an ellipsis; full text stays in the report.
+                if len(lines) > 4:
+                    lines = lines[:4]
+                    while draw.textlength(lines[-1] + '…', font=face) > 880:
+                        lines[-1] = lines[-1][:-1]
+                    lines[-1] += '…'
+                for line_index, line in enumerate(lines):
+                    draw.text((130, top + line_index * 72), line, fill=ink, font=face)
+                source = item['source'][:27] + ('…' if len(item['source']) > 27 else '')
+                draw.text((130, top + 294), source, fill=muted, font=font(28))
+                date = item['published'] + (' · 이전 조회 자료' if item.get('cached') else '')
+                draw.text((130, top + 333), date, fill=muted, font=font(28))
+                if index == 0 and len(entries) > 1:
+                    draw.line((54, top + 370, 1026, top + 370), fill='#E2E8F0', width=2)
+            footnote = '기사 제목 기반 · 세제개편안은 확정 법률과 다릅니다.'
+        draw.text((54, 1022), footnote, fill=muted, font=font(26))
+        path = directory / f"{report['date']}-{page:02}.png"
+        image.save(path)
+        paths.append(path)
+    return paths
 
 
 def write_report(report, directory):
     directory.mkdir(parents=True, exist_ok=True)
     stem = report['date']
-    render(report, directory / (stem + '.png'))
-    lines = [f"# {stem} 미국주식·세무 브리핑", '', f'![오늘의 그림]({stem}.png)', '',
+    cards = render(report, directory)
+    report['cards'] = [path.name for path in cards]
+    lines = [f"# {stem} 미국주식·세무 브리핑", '',
+             *[f'![카드 {index}]({path.name})' for index, path in enumerate(cards, 1)], '',
              '공개 뉴스 제목 기반입니다. 개별 세무 판단·매매 추천이 아닙니다.', '']
     for i, item in enumerate(report['items'], 1):
         safe_title = item['text'].replace('[', '［').replace(']', '］')
@@ -315,6 +326,7 @@ def write_report(report, directory):
     lines += ['', *report['warnings']]
     (directory / (stem + '.md')).write_text('\n'.join(lines), encoding='utf-8')
     (directory / (stem + '.json')).write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
+    return cards
 
 
 def encrypt_token(token, key):
@@ -343,13 +355,14 @@ def commit_state(message):
     return subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
 
 
-def build_template(report, repository, sha):
+def build_template(card, repository, sha):
     if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', repository) or not re.fullmatch(r'[a-f0-9]{40}', sha):
         raise ValueError('Invalid repository or commit')
-    path = f"docs/{report['date']}"
+    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}-\d{2}\.png', card):
+        raise ValueError('Invalid card filename')
     # The default feed adds a button even when buttons is omitted.
     return {'template_id': '139046', 'template_args': {
-        'IMAGE': f'https://raw.githubusercontent.com/{repository}/{sha}/{path}.png'}}
+        'IMAGE': f'https://raw.githubusercontent.com/{repository}/{sha}/docs/{card}'}}
 
 
 def send_message(access, template):
@@ -361,9 +374,9 @@ def send_message(access, template):
         raise RuntimeError('Kakao did not confirm delivery; do not retry automatically')
 
 
-def run_cloud(report, send):
+def run_cloud(report, send, test=False):
     state = ROOT / '.state'
-    attempt = state / (report['date'] + '.json')
+    attempt = state / (report['date'] + ('-cards-test' if test else '') + '.json')
     if send and attempt.exists():
         print('Already attempted today; no duplicate message sent.')
         return
@@ -376,28 +389,34 @@ def run_cloud(report, send):
         token_path.write_bytes(encrypt_token(token, key))
         # Persist refreshed credentials before collecting/publishing/sending can fail.
         commit_state('Persist encrypted Kakao credential')
-    write_report(report, ROOT / 'docs')
+    if test:
+        report['demo'] = True
+    cards = write_report(report, ROOT / 'docs')
     sha = commit_state('Publish public economic and tax briefing')
     if not send:
         print('Preview published; no Kakao message sent.')
         return
-    template = build_template(report, os.environ['GITHUB_REPOSITORY'], sha)
-    expected = hashlib.sha256((ROOT / 'docs' / (report['date'] + '.png')).read_bytes()).digest()
-    for _ in range(6):
-        try:
-            if hashlib.sha256(request(template['template_args']['IMAGE'])).digest() == expected:
-                break
-        except (OSError, RuntimeError):
-            pass
-        time.sleep(5)
-    else:
-        raise RuntimeError('Published image is not reachable; no message sent')
-    attempt.write_text(json.dumps({'status': 'attempting', 'at': datetime.now(KST).isoformat()}), encoding='utf-8')
+    templates = [build_template(card.name, os.environ['GITHUB_REPOSITORY'], sha) for card in cards]
+    for card, template in zip(cards, templates):
+        expected = hashlib.sha256(card.read_bytes()).digest()
+        for _ in range(6):
+            try:
+                if hashlib.sha256(request(template['template_args']['IMAGE'])).digest() == expected:
+                    break
+            except (OSError, RuntimeError):
+                pass
+            time.sleep(5)
+        else:
+            raise RuntimeError('Published image is not reachable; no message sent')
+    delivery = {'status': 'attempting', 'at': datetime.now(KST).isoformat(), 'total': len(cards), 'confirmed': 0}
+    attempt.write_text(json.dumps(delivery), encoding='utf-8')
     commit_state('Reserve daily delivery; never retry uncertain sends')
-    send_message(access, template)
-    attempt.write_text(json.dumps({'status': 'confirmed', 'at': datetime.now(KST).isoformat()}), encoding='utf-8')
-    commit_state('Record Kakao API confirmed delivery')
-    print('Kakao API result_code=0: one message sent.')
+    for index, template in enumerate(templates, 1):
+        send_message(access, template)
+        delivery.update(confirmed=index, status='confirmed' if index == len(cards) else 'attempting')
+        attempt.write_text(json.dumps(delivery), encoding='utf-8')
+        commit_state(f'Record Kakao card {index}/{len(cards)} confirmed delivery')
+        print(f'Kakao API result_code=0: card {index}/{len(cards)} sent.')
 
 
 def is_delivery_day(now):
@@ -408,6 +427,7 @@ def is_delivery_day(now):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--cloud', action='store_true')
+    parser.add_argument('--test', action='store_true', help='One separate test card set per day')
     args = parser.parse_args()
     now = datetime.now(KST)
     if args.cloud and not is_delivery_day(now):
@@ -420,7 +440,7 @@ def main():
     if not report['items'] and not report['markets']:
         raise RuntimeError('All sources failed; no empty report or message will be sent')
     if args.cloud:
-        run_cloud(report, os.environ.get('SEND', '').lower() == 'true')
+        run_cloud(report, os.environ.get('SEND', '').lower() == 'true', test=args.test)
     else:
         write_report(report, ROOT / 'preview')
         print('Local preview built; no message sent.')

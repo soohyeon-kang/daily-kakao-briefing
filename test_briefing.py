@@ -109,20 +109,22 @@ class BriefingTests(unittest.TestCase):
     def test_uncertain_send_does_not_retry(self):
         with patch.object(b, 'json_request', side_effect=RuntimeError('timeout')) as call:
             with self.assertRaises(RuntimeError):
-                b.send_message('secret', b.build_template({'date': '2026-11-17'}, 'owner/repo', 'a' * 40))
+                b.send_message('secret', b.build_template('2026-11-17-01.png', 'owner/repo', 'a' * 40))
             self.assertEqual(call.call_count, 1)
 
     def test_custom_image_template_and_send_endpoint(self):
-        template = b.build_template({'date': '2026-11-17'}, 'owner/repo', 'a' * 40)
+        template = b.build_template('2026-11-17-01.png', 'owner/repo', 'a' * 40)
         self.assertEqual(template['template_id'], '139046')
         self.assertEqual(list(template['template_args']), ['IMAGE'])
-        self.assertTrue(template['template_args']['IMAGE'].endswith('/docs/2026-11-17.png'))
+        self.assertTrue(template['template_args']['IMAGE'].endswith('/docs/2026-11-17-01.png'))
         with patch.object(b, 'json_request', return_value={'result_code': 0}) as call:
             b.send_message('secret', template)
             self.assertEqual(call.call_args.args[0], 'https://kapi.kakao.com/v2/api/talk/memo/send')
             self.assertEqual(json.loads(call.call_args.kwargs['data']['template_args']), template['template_args'])
         with self.assertRaises(ValueError):
-            b.build_template({'date': '2026-11-17'}, 'https://bad', 'a' * 40)
+            b.build_template('2026-11-17-01.png', 'https://bad', 'a' * 40)
+        with self.assertRaises(ValueError):
+            b.build_template('../secret.png', 'owner/repo', 'a' * 40)
 
     def test_existing_attempt_blocks_send_before_credentials(self):
         with tempfile.TemporaryDirectory() as temp, patch.object(b, 'ROOT', Path(temp)):
@@ -150,7 +152,7 @@ class BriefingTests(unittest.TestCase):
     def test_kakao_rejects_nonzero_result(self):
         with patch.object(b, 'json_request', return_value={'result_code': -1}):
             with self.assertRaises(RuntimeError):
-                b.send_message('secret', b.build_template({'date': '2026-11-17'}, 'owner/repo', 'a' * 40))
+                b.send_message('secret', b.build_template('2026-11-17-01.png', 'owner/repo', 'a' * 40))
 
     def test_render_ten_long_headlines_without_cropping(self):
         report = {'date': '2026-11-17', 'demo': True, 'markets': [], 'warnings': ['테스트 데이터'],
@@ -159,11 +161,51 @@ class BriefingTests(unittest.TestCase):
                              'source': '테스트', 'published': '11/17 09:00',
                              'url': 'https://example.com'} for i in range(10)]}
         with tempfile.TemporaryDirectory() as temp:
-            b.write_report(report, Path(temp))
-            with Image.open(Path(temp) / '2026-11-17.png') as image:
-                self.assertEqual(image.width, 1080)
-                self.assertGreater(image.height, 1500)
-                self.assertLess(image.height, 4000)
+            cards = b.write_report(report, Path(temp))
+            self.assertEqual(len(cards), 6)  # Five news cards and one status card.
+            self.assertEqual(report['cards'], [card.name for card in cards])
+            for card in cards:
+                with Image.open(card) as image:
+                    self.assertEqual(image.size, (1080, 1080))
+            self.assertIn(report['items'][0]['text'], (Path(temp) / '2026-11-17.md').read_text(encoding='utf-8'))
+
+    def test_card_set_records_partial_delivery_and_blocks_retries(self):
+        for fail_second in (False, True):
+            with self.subTest(fail_second=fail_second), tempfile.TemporaryDirectory() as temp, \
+                 patch.object(b, 'ROOT', Path(temp)):
+                state = Path(temp) / '.state'
+                state.mkdir()
+                key = base64.b64encode(b'k' * 32).decode()
+                (state / 'kakao.enc').write_bytes(b.encrypt_token('old', key))
+                cards = [Path(temp) / f'2026-11-17-{i:02}.png' for i in (1, 2)]
+                for card in cards:
+                    card.write_bytes(b'image')
+                with patch.dict(b.os.environ, {'TOKEN_KEY': key, 'KAKAO_REST_API_KEY': 'key',
+                                              'GITHUB_REPOSITORY': 'owner/repo'}), \
+                     patch.object(b, 'refresh_token', return_value=('access', 'new')), \
+                     patch.object(b, 'commit_state', return_value='a' * 40), \
+                     patch.object(b, 'write_report', return_value=cards), \
+                     patch.object(b, 'request', return_value=b'image'), \
+                     patch.object(b, 'send_message', side_effect=[None, RuntimeError('timeout')] if fail_second else [None, None]) as send:
+                    if fail_second:
+                        with self.assertRaises(RuntimeError):
+                            b.run_cloud({'date': '2026-11-17'}, True)
+                    else:
+                        b.run_cloud({'date': '2026-11-17'}, True)
+                    ledger = json.loads((state / '2026-11-17.json').read_text())
+                    self.assertEqual(ledger['confirmed'], 1 if fail_second else 2)
+                    self.assertEqual(ledger['status'], 'attempting' if fail_second else 'confirmed')
+                    b.run_cloud({'date': '2026-11-17'}, True)
+                    self.assertEqual(send.call_count, 2)
+
+    def test_separate_test_ledger_never_bypasses_its_duplicate_guard(self):
+        with tempfile.TemporaryDirectory() as temp, patch.object(b, 'ROOT', Path(temp)):
+            state = Path(temp) / '.state'
+            state.mkdir()
+            (state / '2026-11-17-cards-test.json').write_text('{"status":"attempting"}')
+            with patch.object(b, 'refresh_token') as refresh:
+                b.run_cloud({'date': '2026-11-17'}, True, test=True)
+                refresh.assert_not_called()
 
 
 if __name__ == '__main__':

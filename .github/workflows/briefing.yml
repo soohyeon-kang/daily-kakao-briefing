@@ -5,7 +5,11 @@ on:
   workflow_dispatch:
     inputs:
       send:
-        description: 'Send one Kakao message (false builds a preview only)'
+        description: 'Send today’s Kakao card set (false builds a preview only)'
+        type: boolean
+        default: false
+      test_cards:
+        description: 'Send a separate test card set, once per day'
         type: boolean
         default: false
 permissions:
@@ -30,5 +34,5 @@ jobs:
           KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
           KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
           TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
-          SEND: ${{ github.event_name == 'schedule' || inputs.send }}
-        run: python briefing.py --cloud
+          SEND: ${{ github.event_name == 'schedule' || inputs.send || inputs.test_cards }}
+        run: python briefing.py --cloud ${{ inputs.test_cards && '--test' || '' }}
